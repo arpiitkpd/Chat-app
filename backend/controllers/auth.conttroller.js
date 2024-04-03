@@ -9,12 +9,12 @@ const signUp = async(req, res)=>{
         const {fullName, gender, userName, password } = req.body;
 
         if(
-            [fullName, username, password].some((field)=> field?.trim() === "")
+            [fullName, userName,gender, password].some((field)=> field?.trim() === "")
         ){
             throw new ApiError(400, " All the fileds are required")
         }
 
-        const user =  await User.findOne({username})
+        const user =  await User.findOne({userName})
         if(user){
             throw new ApiError(404, "userName is already existed")
         }
@@ -24,8 +24,8 @@ const signUp = async(req, res)=>{
         const hashPassword = await bcrypt.hash(password, salt)
 
 
-        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
-        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
+        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?userName=${userName}`
+        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?userName=${userName}`
 
         const newUser = new User({
             fullName,
@@ -60,8 +60,8 @@ const signUp = async(req, res)=>{
 const login = async(req, res)=>{
     try {
         
-        const {username, password} = req.body;
-        const user = await User.findOne({username})
+        const {userName, password} = req.body;
+        const user = await User.findOne({userName})
 
         if(!user){
             throw new ApiError(400, "No user exixted")
